@@ -24,6 +24,50 @@ The on-chain backbone of BethNa is the `SentientTrader.sol` smart contract. It a
 
 ## Contract Overview
 
+### Architecture Diagram
+
+```mermaid
+graph TB
+    subgraph "User Layer"
+        U[User Wallet]
+        USDC[USDC Balance]
+        OPT[Option Tokens]
+    end
+    
+    subgraph "BethNa Layer"
+        AG[AI Agents]
+        BE[Backend Service]
+    end
+    
+    subgraph "Smart Contract Layer"
+        ST[SentientTrader.sol]
+        AC[Access Control]
+        SP[Slippage Protection]
+        PS[Pausable]
+    end
+    
+    subgraph "External Protocol"
+        TR[Thetanuts V4 Router]
+        LP[Liquidity Pools]
+    end
+    
+    U -->|Approve| ST
+    AG -->|Recommendation| BE
+    BE -->|Execute Trade| ST
+    ST -->|Check Authorization| AC
+    ST -->|Validate Slippage| SP
+    ST -->|Check Status| PS
+    ST -->|Swap| TR
+    TR -->|Trade| LP
+    LP -->|Return Tokens| TR
+    TR -->|Return| ST
+    ST -->|Transfer| U
+    
+    style ST fill:#4CAF50
+    style U fill:#2196F3
+    style TR fill:#FF9800
+```
+
 ### Key Components
 
 | Component | Purpose |
@@ -56,34 +100,62 @@ bool public isPaused;
 
 ### Buy Option Flow
 
-```
-User
-  ↓ [1. Approve USDC]
-SentientTrader.sol
-  ↓ [2. TransferFrom USDC]
-  ↓ [3. Approve Thetanuts Router]
-Thetanuts V4 Router
-  ↓ [4. Execute Swap]
-  ↓ [5. Return Option Token]
-SentientTrader.sol
-  ↓ [6. Transfer Option Token to User]
-User
+```mermaid
+sequenceDiagram
+    participant U as User Wallet
+    participant ST as SentientTrader
+    participant TR as Thetanuts Router
+    participant LP as Liquidity Pool
+    
+    Note over U: Has USDC
+    U->>ST: 1. Approve USDC spending
+    U->>ST: 2. buyOption(optionToken, amountIn)
+    
+    ST->>ST: Check authorization
+    ST->>ST: Check not paused
+    ST->>U: 3. transferFrom(USDC)
+    
+    ST->>TR: 4. Approve USDC
+    ST->>TR: 5. swapExactTokensForTokens()
+    TR->>LP: 6. Execute swap
+    LP->>TR: 7. Return option tokens
+    TR->>ST: 8. Return option tokens
+    
+    ST->>ST: 9. Validate slippage
+    ST->>U: 10. Transfer option tokens
+    
+    Note over U: Received Option Tokens
+    ST->>ST: Emit OptionPurchased event
 ```
 
 ### Sell Option Flow
 
-```
-User
-  ↓ [1. Approve Option Token]
-SentientTrader.sol
-  ↓ [2. TransferFrom Option Token]
-  ↓ [3. Approve Thetanuts Router]
-Thetanuts V4 Router
-  ↓ [4. Execute Swap]
-  ↓ [5. Return USDC]
-SentientTrader.sol
-  ↓ [6. Transfer USDC to User]
-User
+```mermaid
+sequenceDiagram
+    participant U as User Wallet
+    participant ST as SentientTrader
+    participant TR as Thetanuts Router
+    participant LP as Liquidity Pool
+    
+    Note over U: Has Option Tokens
+    U->>ST: 1. Approve option token spending
+    U->>ST: 2. sellOption(optionToken, amountIn)
+    
+    ST->>ST: Check authorization
+    ST->>ST: Check not paused
+    ST->>U: 3. transferFrom(option tokens)
+    
+    ST->>TR: 4. Approve option tokens
+    ST->>TR: 5. swapExactTokensForTokens()
+    TR->>LP: 6. Execute swap
+    LP->>TR: 7. Return USDC
+    TR->>ST: 8. Return USDC
+    
+    ST->>ST: 9. Validate slippage
+    ST->>U: 10. Transfer USDC
+    
+    Note over U: Received USDC
+    ST->>ST: Emit OptionSold event
 ```
 
 ## Smart Contract Functions
@@ -135,6 +207,45 @@ function updateRouter(address newRouter) external onlyOwner
 Updates Thetanuts router address (for protocol upgrades).
 
 ## Security Features
+
+### Security Architecture
+
+```mermaid
+graph LR
+    subgraph "Security Layers"
+        L1[Layer 1: Authorization]
+        L2[Layer 2: Pausable]
+        L3[Layer 3: Slippage Protection]
+        L4[Layer 4: Reentrancy Guard]
+        L5[Layer 5: Event Logging]
+    end
+    
+    subgraph "Entry Points"
+        BUY[buyOption]
+        SELL[sellOption]
+    end
+    
+    BUY --> L1
+    SELL --> L1
+    L1 --> L2
+    L2 --> L4
+    L4 --> L3
+    L3 --> L5
+    
+    L1 -.->|Fail| REJECT[Reject Transaction]
+    L2 -.->|Fail| REJECT
+    L3 -.->|Fail| REJECT
+    L4 -.->|Fail| REJECT
+    L5 --> SUCCESS[Execute Trade]
+    
+    style L1 fill:#f44336
+    style L2 fill:#ff9800
+    style L3 fill:#ffc107
+    style L4 fill:#4caf50
+    style L5 fill:#2196f3
+    style SUCCESS fill:#4CAF50
+    style REJECT fill:#f44336
+```
 
 ### 1. Authorization System
 
@@ -207,6 +318,32 @@ event OptionSold(
 |---------|---------|--------|
 | **Base Mainnet** | `0x742d35Cc...` *(TBD)* | Live |
 | **Base Sepolia** | `0x8f2e1b...` | Testnet |
+
+### Contract Dependencies
+
+```mermaid
+graph TD
+    ST[SentientTrader.sol]
+    OZ1[Ownable]
+    OZ2[Pausable]
+    OZ3[ReentrancyGuard]
+    IERC[IERC20]
+    TR[IThetanutsRouter]
+    
+    ST ---|inherits| OZ1
+    ST ---|inherits| OZ2
+    ST ---|inherits| OZ3
+    ST ---|uses| IERC
+    ST ---|interfaces| TR
+    
+    OZ1 ---|from| OZC[OpenZeppelin v4.9.0]
+    OZ2 ---|from| OZC
+    OZ3 ---|from| OZC
+    IERC ---|from| OZC
+    
+    style ST fill:#4CAF50
+    style OZC fill:#2196F3
+```
 
 ## Upgradability
 
