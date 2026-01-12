@@ -79,21 +79,3 @@ Yes. BethNa is a Progressive Web App (PWA) installable on iOS/Android.
 
 ### Does BethNa work with Ledger/Trezor?
 Yes. Any wallet compatible with WalletConnect works.
-
----
-
-## Support
-
-### How do I get help?
-- Discord: [discord.gg/bethna]
-- Telegram: [@bethna_support]
-- Email: support@bethna.ai
-
-### Is there a tutorial?
-Yes. First-time users get an interactive walkthrough.
-
----
-
-## More Questions?
-
-Join our [Discord](https://discord.gg/bethna) for real-time support!
