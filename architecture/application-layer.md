@@ -347,5 +347,5 @@ CREATE TABLE trades (
 ---
 
 {% hint style="info" %}
-**Learn about**: [Tokenomics](../tokenomics/README.md) | [Roadmap](../roadmap/README.md)
+**Learn about**: [Tokenomics](../tokenomics/README.md)
 {% endhint %}
