@@ -78,12 +78,6 @@ bethna-docs/
 │   ├── backend.md             # Python FastAPI
 │   └── blockchain.md          # Solidity, Foundry
 │
-├── roadmap/
-│   ├── README.md              # Roadmap overview
-│   ├── phase-1.md             # Genesis (Q1 2026)
-│   ├── phase-2.md             # Decentralization (Q3 2026)
-│   └── phase-3.md             # Sentient Network (2027)
-│
 ├── risks/
 │   ├── README.md              # Risk disclosure
 │   ├── financial.md           # Financial risks
@@ -155,12 +149,6 @@ bethna-docs/
 * [Frontend](technology/frontend.md)
 * [Backend](technology/backend.md)
 * [Blockchain](technology/blockchain.md)
-
-## Roadmap
-* [Development Phases](roadmap/README.md)
-* [Phase 1: Genesis](roadmap/phase-1.md)
-* [Phase 2: Decentralization](roadmap/phase-2.md)
-* [Phase 3: Sentient Network](roadmap/phase-3.md)
 
 ## Risk Disclosure
 * [Overview](risks/README.md)
@@ -246,7 +234,7 @@ git init
 # Create basic structure
 mkdir -p introduction problem solution architecture agents
 mkdir -p smart-contracts security tokenomics gamification
-mkdir -p technology roadmap risks resources .gitbook/assets
+mkdir -p technology risks resources .gitbook/assets
 
 # Create required files
 touch README.md SUMMARY.md .gitbook.yaml

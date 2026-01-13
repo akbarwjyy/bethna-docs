@@ -234,5 +234,5 @@ $BETH accrues value through:
 ---
 
 {% hint style="success" %}
-**Back to**: [Tokenomics Overview](README.md) | Explore [Roadmap](../roadmap/README.md)
+**Back to**: [Tokenomics Overview](README.md)
 {% endhint %}
