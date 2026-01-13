@@ -49,12 +49,6 @@
 * [Backend](technology/backend.md)
 * [Blockchain](technology/blockchain.md)
 
-## Roadmap
-* [Development Phases](roadmap/README.md)
-* [Phase 1: Genesis](roadmap/phase-1.md)
-* [Phase 2: Decentralization](roadmap/phase-2.md)
-* [Phase 3: Sentient Network](roadmap/phase-3.md)
-
 ## Risk Disclosure
 * [Overview](risks/README.md)
 * [Financial Risks](risks/financial.md)
