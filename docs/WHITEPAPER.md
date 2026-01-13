@@ -63,20 +63,3 @@ The **Bethna Governance Token ($BETH)** is designed to align the incentives of u
 | **Fee Discount** | Staking $BETH reduces the performance fee charged on profitable AI trades (Standard: 20% -> Staked: 10%). |
 | **Pro Access** | Unlocks access to **Agent Delta** (Hedging) and **Agent Gamma** (Advanced Risk Management) for sophisticated users. |
 | **Revenue Share** | A portion of protocol revenue is used to buy back and burn $BETH, creating deflationary pressure. |
-
----
-
-## **5. Roadmap**
-
-### **Phase 1: Genesis (Q1 2026)**
-*   [x] **Protocol Launch**: Deployment of `SentientTrader.sol` on Base Mainnet.
-*   [x] **Core Agents**: Implementation of Agent Alpha (Analyst) and Agent Beta (Executor).
-*   [x] **Dashboard V1**: Launch of the "Bespoke Radiant" user interface.
-
-### **Phase 2: Decentralization (Q3 2026)**
-*   [ ] **Account Abstraction**: Implementation of **Session Keys (EIP-4337)**. This removes the need for "Authorized Trader" whitelisting, allowing users to granularly approve Agent actions for a set time window.
-*   [ ] **Strategy Vaults**: Public vaults where users can deposit USDC for pooled AI management, reducing gas costs for smaller portfolios.
-
-### **Phase 3: The Sentient Network (2027)**
-*   [ ] **Agent Marketplace**: A platform for community developers to train and upload their own trading agents (e.g., "Momentum Bot", "Mean Reversion Bot").
-*   [ ] **Cross-Chain Expansion**: Deploy SentientTrader to Arbitrum and Optimism to capture liquidity across the Superchain.
